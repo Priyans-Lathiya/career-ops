@@ -54,6 +54,22 @@ try {
   ok('unknown flag exits non-zero and names the flag', /--bogus/.test(String(error.stderr)));
 }
 
+try {
+  runCli('only-one-path.txt');
+  ok('a single positional path exits 1 with the arity error', false);
+} catch (error) {
+  ok('a single positional path exits 1 with the arity error',
+    error.status === 1 && String(error.stderr).includes('Error: expected two file paths.'));
+}
+
+try {
+  runCli('a.md', 'b.md', 'c.md');
+  ok('a third positional path exits 1 with the arity error', false);
+} catch (error) {
+  ok('a third positional path exits 1 with the arity error',
+    error.status === 1 && /expected two file paths/.test(String(error.stderr)));
+}
+
 const tmpDir = mkdtempSync(join(tmpdir(), 'jd-similarity-test-'));
 try {
   const NEW_JD = 'Senior React TypeScript Node.js platform engineer, distributed systems';

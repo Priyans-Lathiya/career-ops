@@ -157,7 +157,7 @@ function parseArgs(argv) {
     process.exit(1);
   }
   const [newJdPath, previousPath] = args;
-  if (!newJdPath || !previousPath) {
+  if (args.length !== 2 || !newJdPath || !previousPath) {
     console.error('Error: expected two file paths.');
     console.error(USAGE);
     process.exit(1);
