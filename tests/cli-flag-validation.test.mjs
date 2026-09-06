@@ -188,6 +188,18 @@ test('weekly-digest: --dir --summary does not scan a directory named "--summary"
   assert.match(r.all, /--dir requires a value/);
 });
 
+test('upskill: --min-reports --summary does not silently fall back to 5 reports', () => {
+  const r = runScript('upskill.mjs', '--min-reports', '--summary');
+  assert.equal(r.status, 1, `want exit 1, got ${r.status}`);
+  assert.match(r.all, /--min-reports requires a value/);
+});
+
+test('upskill: --url-text --help reports the missing operand instead of printing usage at exit 0', () => {
+  const r = runScript('upskill.mjs', '--url-text', '--help');
+  assert.equal(r.status, 1, `want exit 1, got ${r.status}`);
+  assert.match(r.all, /--url-text requires a value/);
+});
+
 // archive-posting.mjs hand-rolls its own argv loop rather than going through
 // validateFlags, so its --company/--role handling needed its own adjacency
 // check (the same class of bug through a different door — see archive-posting.mjs).
