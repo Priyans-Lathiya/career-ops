@@ -200,6 +200,36 @@ test('upskill: --url-text --help reports the missing operand instead of printing
   assert.match(r.all, /--url-text requires a value/);
 });
 
+test('audit-portals: --help --bogus still reports the unrecognized flag', () => {
+  const r = runScript('audit-portals.mjs', '--help', '--bogus');
+  assert.equal(r.status, 1, `want exit 1, got ${r.status}`);
+  assert.match(r.all, /unrecognized flag\(s\): --bogus/);
+});
+
+test('audit-portals: --file --help reports the missing operand, not usage at exit 0', () => {
+  const r = runScript('audit-portals.mjs', '--file', '--help');
+  assert.equal(r.status, 1, `want exit 1, got ${r.status}`);
+  assert.match(r.all, /--file requires a value/);
+});
+
+test('audit-portals: --company --strict does not audit every board instead of one', () => {
+  const r = runScript('audit-portals.mjs', '--company', '--strict');
+  assert.equal(r.status, 1, `want exit 1, got ${r.status}`);
+  assert.match(r.all, /--company requires a value/);
+});
+
+test('audit-portals: a trailing --baseline does not silently skip the comparison', () => {
+  const r = runScript('audit-portals.mjs', '--baseline');
+  assert.equal(r.status, 1, `want exit 1, got ${r.status}`);
+  assert.match(r.all, /--baseline requires a value/);
+});
+
+test('audit-portals: --help alone still prints usage and exits 0', () => {
+  const r = runScript('audit-portals.mjs', '--help');
+  assert.equal(r.status, 0, `want exit 0, got ${r.status}`);
+  assert.match(r.all, /Usage:/i);
+});
+
 // archive-posting.mjs hand-rolls its own argv loop rather than going through
 // validateFlags, so its --company/--role handling needed its own adjacency
 // check (the same class of bug through a different door — see archive-posting.mjs).
